@@ -149,6 +149,7 @@
     <script src="{{ asset('assets/js/feather/feather.min.js') }}"></script>
     <script src="{{ asset('assets/js/scrollbar/simplebar.js') }}"></script>
     <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
+    <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script>
         if (window.feather) { feather.replace(); }
