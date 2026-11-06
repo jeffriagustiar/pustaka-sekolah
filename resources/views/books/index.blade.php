@@ -35,11 +35,7 @@
                                     <td><span class="badge badge-primary">{{ $book->stok_tersedia }}</span></td>
                                     <td>
                                         <a href="{{ route('books.edit', $book) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                        <form action="{{ route('books.destroy', $book) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus buku ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" data-action="{{ route('books.destroy', $book) }}" data-title="{{ $book->judul }}">Hapus</button>
                                     </td>
                                 </tr>
                             @empty
@@ -57,4 +53,40 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div class="modal fade" id="deleteBookModal" tabindex="-1" role="dialog" aria-labelledby="deleteBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteBookModalLabel">Konfirmasi Hapus</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus buku <strong id="deleteBookTitle"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
+                <form id="deleteBookForm" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+document.getElementById('deleteBookModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var action = button.getAttribute('data-action');
+    var title = button.getAttribute('data-title');
+    document.getElementById('deleteBookForm').setAttribute('action', action);
+    document.getElementById('deleteBookTitle').textContent = title;
+});
+</script>
+@endpush
+
 @endsection
