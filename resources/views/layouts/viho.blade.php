@@ -58,6 +58,9 @@
                 </div>
                 <div class="nav-right col pull-right right-menu p-0">
                     <ul class="nav-menus">
+                        <li>
+                            <div class="mode"><i class="fa fa-moon-o"></i></div>
+                        </li>
                         <li class="onhover-dropdown p-0">
                             <button class="btn btn-primary-light" type="button">
                                 <a href="#"><i data-feather="log-out"></i> Keluar</a>
@@ -149,10 +152,16 @@
     <script src="{{ asset('assets/js/feather/feather.min.js') }}"></script>
     <script src="{{ asset('assets/js/scrollbar/simplebar.js') }}"></script>
     <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
-    <script src="{{ asset('assets/js/theme-customizer/customizer.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script>
         if (window.feather) { feather.replace(); }
+        (function () {
+            if (localStorage.getItem('body') === 'dark-only') {
+                document.body.classList.add('dark-only');
+                var icon = document.querySelector('.mode i');
+                if (icon) { icon.classList.remove('fa-moon-o'); icon.classList.add('fa-lightbulb-o'); }
+            }
+        })();
         window.addEventListener('load', function () {
             var lw = document.querySelector('.loader-wrapper');
             if (lw) { lw.style.display = 'none'; }
