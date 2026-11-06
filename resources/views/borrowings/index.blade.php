@@ -1,80 +1,87 @@
-@extends('layouts.app')
+@extends('layouts.viho')
 
 @section('title', 'Daftar Peminjaman')
 
 @section('content')
-<div class="flex items-center justify-between mb-4">
-    <h1 class="text-2xl font-bold">Daftar Peminjaman</h1>
-    <a href="{{ route('borrowings.create') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Transaksi Baru</a>
-</div>
-
-<div class="space-y-4">
-    @forelse ($transactions as $trx)
-        <div class="bg-white rounded-xl border border-slate-200 p-4">
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-                <div>
-                    <div class="font-semibold">{{ $trx->student_name }}</div>
-                    <div class="text-sm text-slate-500">NISN: {{ $trx->student_nisn }} | Pinjam: {{ $trx->tanggal_pinjam->format('d/m/Y') }} | Batas: {{ $trx->batas_kembali->format('d/m/Y') }}</div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="px-3 py-1 rounded-full text-xs
-                        @if($trx->status_global === 'Selesai Total') bg-green-100 text-green-700
-                        @elseif($trx->status_global === 'Selesai Sebagian') bg-yellow-100 text-yellow-700
-                        @else bg-blue-100 text-blue-700 @endif">
-                        {{ $trx->status_global }}
-                    </span>
-                    @if ($trx->status_global !== 'Selesai Total')
-                        <form action="{{ route('borrowings.return-all', $trx) }}" method="POST" onsubmit="return confirm('Kembalikan semua buku?')">
-                            @csrf
-                            <button type="submit" class="text-sm px-3 py-1 border border-slate-300 rounded-lg hover:bg-slate-50">Kembalikan Semua</button>
-                        </form>
-                    @endif
-                </div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                <h5>Daftar Peminjaman</h5>
+                <a href="{{ route('borrowings.create') }}" class="btn btn-primary">Transaksi Baru</a>
             </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm">
-                    <thead class="bg-slate-50 text-left">
-                        <tr>
-                            <th class="px-3 py-2">Buku</th>
-                            <th class="px-3 py-2">Status</th>
-                            <th class="px-3 py-2">Tgl Dikembalikan</th>
-                            <th class="px-3 py-2">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($trx->details as $detail)
-                            <tr class="border-t border-slate-100">
-                                <td class="px-3 py-2">{{ $detail->book->judul ?? '-' }}</td>
-                                <td class="px-3 py-2">
-                                    <span class="px-2 py-1 rounded-full text-xs
-                                        @if($detail->status_item === 'Dikembalikan') bg-green-100 text-green-700
-                                        @else bg-blue-100 text-blue-700 @endif">
-                                        {{ $detail->status_item }}
-                                    </span>
-                                </td>
-                                <td class="px-3 py-2">{{ $detail->tanggal_dikembalikan ? $detail->tanggal_dikembalikan->format('d/m/Y') : '-' }}</td>
-                                <td class="px-3 py-2">
-                                    @if ($detail->status_item !== 'Dikembalikan')
-                                        <form action="{{ route('borrowings.return-item', $detail) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="text-indigo-600 hover:underline text-sm">Kembalikan</button>
-                                        </form>
-                                    @else
-                                        <span class="text-slate-400 text-sm">-</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="card-body">
+                @forelse ($transactions as $trx)
+                    <div class="card mb-3">
+                        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">{{ $trx->student_name }}</h6>
+                                <small class="text-muted">NISN: {{ $trx->student_nisn }} | Pinjam: {{ $trx->tanggal_pinjam->format('d/m/Y') }} | Batas: {{ $trx->batas_kembali->format('d/m/Y') }}</small>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                @if($trx->status_global === 'Selesai Total')
+                                    <span class="badge badge-success">{{ $trx->status_global }}</span>
+                                @elseif($trx->status_global === 'Selesai Sebagian')
+                                    <span class="badge badge-warning">{{ $trx->status_global }}</span>
+                                @else
+                                    <span class="badge badge-primary">{{ $trx->status_global }}</span>
+                                @endif
+                                @if ($trx->status_global !== 'Selesai Total')
+                                    <form action="{{ route('borrowings.return-all', $trx) }}" method="POST" class="d-inline" onsubmit="return confirm('Kembalikan semua buku?')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Kembalikan Semua</button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Buku</th>
+                                            <th>Status</th>
+                                            <th>Tgl Dikembalikan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($trx->details as $detail)
+                                            <tr>
+                                                <td>{{ $detail->book->judul ?? '-' }}</td>
+                                                <td>
+                                                    @if($detail->status_item === 'Dikembalikan')
+                                                        <span class="badge badge-success">{{ $detail->status_item }}</span>
+                                                    @else
+                                                        <span class="badge badge-primary">{{ $detail->status_item }}</span>
+                                                    @endif
+                                                </td>
+                                                <td>{{ $detail->tanggal_dikembalikan ? $detail->tanggal_dikembalikan->format('d/m/Y') : '-' }}</td>
+                                                <td>
+                                                    @if ($detail->status_item !== 'Dikembalikan')
+                                                        <form action="{{ route('borrowings.return-item', $detail) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary">Kembalikan</button>
+                                                        </form>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center text-muted py-4">Belum ada transaksi peminjaman.</div>
+                @endforelse
+                <div class="mt-3">
+                    {{ $transactions->links() }}
+                </div>
             </div>
         </div>
-    @empty
-        <div class="bg-white rounded-xl border border-slate-200 p-6 text-center text-slate-500">Belum ada transaksi peminjaman.</div>
-    @endforelse
-</div>
-
-<div class="mt-4">
-    {{ $transactions->links() }}
+    </div>
 </div>
 @endsection
