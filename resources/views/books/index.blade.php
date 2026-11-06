@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                 <h5>Daftar Buku</h5>
-                <a href="{{ route('books.create') }}" class="btn btn-primary">Tambah Buku</a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">Tambah Buku</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -50,6 +50,51 @@
                     {{ $books->links() }}
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah Buku -->
+<div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="addBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBookModalLabel">Tambah Buku</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('books.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="col-form-label">Kode Buku</label>
+                        <input type="text" name="kode_buku" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Judul</label>
+                        <input type="text" name="judul" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Pengarang</label>
+                        <input type="text" name="pengarang" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Penerbit</label>
+                        <input type="text" name="penerbit" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Tahun Terbit</label>
+                        <input type="number" name="tahun_terbit" min="1000" max="{{ date('Y') }}" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Stok Tersedia</label>
+                        <input type="number" name="stok_tersedia" value="0" min="0" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
