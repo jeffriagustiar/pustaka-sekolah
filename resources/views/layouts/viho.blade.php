@@ -14,14 +14,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/icofont.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/themify.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/feather-icon.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
     @stack('styles')
 </head>
 <body>
-    <div class="loader-wrapper">
-        <div class="loader"></div>
-    </div>
-
     <div class="page-wrapper compact-wrapper" id="pageWrapper">
         <div class="page-header">
             <div class="header-wrapper row m-0">
@@ -116,10 +111,6 @@
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script>
         if (window.feather) { feather.replace(); }
-        window.addEventListener('load', function () {
-            var lw = document.querySelector('.loader-wrapper');
-            if (lw) { lw.style.display = 'none'; }
-        });
     </script>
     @stack('scripts')
 </body>
