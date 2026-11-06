@@ -18,6 +18,8 @@
                                 <th>Kode</th>
                                 <th>Judul</th>
                                 <th>Pengarang</th>
+                                <th>Penerbit</th>
+                                <th>Tahun</th>
                                 <th>Stok</th>
                                 <th>Aksi</th>
                             </tr>
@@ -28,6 +30,8 @@
                                     <td>{{ $book->kode_buku }}</td>
                                     <td>{{ $book->judul }}</td>
                                     <td>{{ $book->pengarang }}</td>
+                                    <td>{{ $book->penerbit ?? '-' }}</td>
+                                    <td>{{ $book->tahun_terbit ?? '-' }}</td>
                                     <td><span class="badge badge-primary">{{ $book->stok_tersedia }}</span></td>
                                     <td>
                                         <a href="{{ route('books.edit', $book) }}" class="btn btn-sm btn-outline-primary">Edit</a>
@@ -40,7 +44,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">Belum ada data buku.</td>
+                                    <td colspan="7" class="text-center text-muted">Belum ada data buku.</td>
                                 </tr>
                             @endforelse
                         </tbody>

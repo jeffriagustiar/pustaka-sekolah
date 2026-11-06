@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\AppServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -132,7 +133,7 @@ return [
         // Package Service Providers...
     ])->merge([
         // Application Service Providers...
-        App\Providers\AppServiceProvider::class,
+        AppServiceProvider::class,
     ])->merge([
         // Added Service Providers (Do not remove this line)...
     ])->toArray(),

@@ -26,6 +26,8 @@ class BookController extends Controller
             'kode_buku' => ['required', 'string', 'max:50', 'unique:books,kode_buku'],
             'judul' => ['required', 'string', 'max:255'],
             'pengarang' => ['required', 'string', 'max:255'],
+            'penerbit' => ['nullable', 'string', 'max:255'],
+            'tahun_terbit' => ['nullable', 'integer', 'min:1000', 'max:'.date('Y')],
             'stok_tersedia' => ['required', 'integer', 'min:0'],
         ]);
 
@@ -45,6 +47,8 @@ class BookController extends Controller
             'kode_buku' => ['required', 'string', 'max:50', Rule::unique('books', 'kode_buku')->ignore($book->id)],
             'judul' => ['required', 'string', 'max:255'],
             'pengarang' => ['required', 'string', 'max:255'],
+            'penerbit' => ['nullable', 'string', 'max:255'],
+            'tahun_terbit' => ['nullable', 'integer', 'min:1000', 'max:'.date('Y')],
             'stok_tersedia' => ['required', 'integer', 'min:0'],
         ]);
 

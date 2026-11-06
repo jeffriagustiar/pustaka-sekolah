@@ -24,6 +24,14 @@
                         <input type="text" name="pengarang" value="{{ old('pengarang', $book->pengarang) }}" class="form-control" required>
                     </div>
                     <div class="mb-3">
+                        <label class="col-form-label">Penerbit</label>
+                        <input type="text" name="penerbit" value="{{ old('penerbit', $book->penerbit) }}" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Tahun Terbit</label>
+                        <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit', $book->tahun_terbit) }}" min="1000" max="{{ date('Y') }}" class="form-control">
+                    </div>
+                    <div class="mb-3">
                         <label class="col-form-label">Stok Tersedia</label>
                         <input type="number" name="stok_tersedia" value="{{ old('stok_tersedia', $book->stok_tersedia) }}" min="0" class="form-control" required>
                     </div>
