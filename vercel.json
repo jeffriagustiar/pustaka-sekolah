@@ -12,6 +12,7 @@
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "true",
+        "APP_URL": "https://pustaka-sekolah-virid.vercel.app",
         "LOG_CHANNEL": "stderr",
         "CACHE_DRIVER": "array",
         "SESSION_DRIVER": "cookie",
