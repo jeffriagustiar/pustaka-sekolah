@@ -34,7 +34,14 @@
                                     <td>{{ $book->tahun_terbit ?? '-' }}</td>
                                     <td><span class="badge badge-primary">{{ $book->stok_tersedia }}</span></td>
                                     <td>
-                                        <a href="{{ route('books.edit', $book) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editBookModal"
+                                            data-id="{{ $book->id }}"
+                                            data-kode="{{ $book->kode_buku }}"
+                                            data-judul="{{ $book->judul }}"
+                                            data-pengarang="{{ $book->pengarang }}"
+                                            data-penerbit="{{ $book->penerbit }}"
+                                            data-tahun="{{ $book->tahun_terbit }}"
+                                            data-stok="{{ $book->stok_tersedia }}">Edit</button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" data-action="{{ route('books.destroy', $book) }}" data-title="{{ $book->judul }}">Hapus</button>
                                     </td>
                                 </tr>
@@ -99,6 +106,52 @@
     </div>
 </div>
 
+<!-- Modal Edit Buku -->
+<div class="modal fade" id="editBookModal" tabindex="-1" role="dialog" aria-labelledby="editBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBookModalLabel">Edit Buku</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editBookForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="col-form-label">Kode Buku</label>
+                        <input type="text" name="kode_buku" id="edit_kode" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Judul</label>
+                        <input type="text" name="judul" id="edit_judul" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Pengarang</label>
+                        <input type="text" name="pengarang" id="edit_pengarang" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Penerbit</label>
+                        <input type="text" name="penerbit" id="edit_penerbit" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Tahun Terbit</label>
+                        <input type="number" name="tahun_terbit" id="edit_tahun" min="1000" max="{{ date('Y') }}" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Stok Tersedia</label>
+                        <input type="number" name="stok_tersedia" id="edit_stok" min="0" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Konfirmasi Hapus -->
 <div class="modal fade" id="deleteBookModal" tabindex="-1" role="dialog" aria-labelledby="deleteBookModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -124,6 +177,18 @@
 
 @push('scripts')
 <script>
+document.getElementById('editBookModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var id = button.getAttribute('data-id');
+    document.getElementById('editBookForm').setAttribute('action', '/books/' + id);
+    document.getElementById('edit_kode').value = button.getAttribute('data-kode') || '';
+    document.getElementById('edit_judul').value = button.getAttribute('data-judul') || '';
+    document.getElementById('edit_pengarang').value = button.getAttribute('data-pengarang') || '';
+    document.getElementById('edit_penerbit').value = button.getAttribute('data-penerbit') || '';
+    document.getElementById('edit_tahun').value = button.getAttribute('data-tahun') || '';
+    document.getElementById('edit_stok').value = button.getAttribute('data-stok') || '';
+});
+
 document.getElementById('deleteBookModal').addEventListener('show.bs.modal', function (event) {
     var button = event.relatedTarget;
     var action = button.getAttribute('data-action');
