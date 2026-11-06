@@ -27,10 +27,7 @@
                                     <span class="badge badge-primary">{{ $trx->status_global }}</span>
                                 @endif
                                 @if ($trx->status_global !== 'Selesai Total')
-                                    <form action="{{ route('borrowings.return-all', $trx) }}" method="POST" class="d-inline" onsubmit="return confirm('Kembalikan semua buku?')">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Kembalikan Semua</button>
-                                    </form>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#confirmActionModal" data-action="{{ route('borrowings.return-all', $trx) }}" data-message="Kembalikan semua buku pada transaksi ini?">Kembalikan Semua</button>
                                 @endif
                             </div>
                         </div>
@@ -59,10 +56,7 @@
                                                 <td>{{ $detail->tanggal_dikembalikan ? $detail->tanggal_dikembalikan->format('d/m/Y') : '-' }}</td>
                                                 <td>
                                                     @if ($detail->status_item !== 'Dikembalikan')
-                                                        <form action="{{ route('borrowings.return-item', $detail) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-sm btn-outline-primary">Kembalikan</button>
-                                                        </form>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#confirmActionModal" data-action="{{ route('borrowings.return-item', $detail) }}" data-message="Kembalikan buku ini?">Kembalikan</button>
                                                     @else
                                                         <span class="text-muted">-</span>
                                                     @endif
@@ -84,4 +78,38 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="confirmActionModal" tabindex="-1" role="dialog" aria-labelledby="confirmActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmActionModalLabel">Konfirmasi</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmActionMessage">Apakah Anda yakin?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
+                <form id="confirmActionForm" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Ya</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+document.getElementById('confirmActionModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var action = button.getAttribute('data-action');
+    var message = button.getAttribute('data-message');
+    document.getElementById('confirmActionForm').setAttribute('action', action);
+    document.getElementById('confirmActionMessage').textContent = message || 'Apakah Anda yakin?';
+});
+</script>
+@endpush
+
 @endsection
