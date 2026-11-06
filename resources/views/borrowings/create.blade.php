@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form action="{{ route('borrowings.store') }}" method="POST" class="card mt-3">
+<form action="{{ route('borrowings.store') }}" method="POST" class="card mt-3" id="borrowingForm">
     @csrf
     <div class="card-body">
         <input type="hidden" name="student_nisn" id="input-nisn">
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmSaveModal">Simpan Transaksi</button>
         <a href="{{ route('borrowings.index') }}" class="btn btn-outline-secondary">Batal</a>
     </div>
 </form>
@@ -162,4 +162,23 @@ document.querySelectorAll('.btn-add-book').forEach(btn => {
 
 renderCart();
 </script>
+
+<div class="modal fade" id="confirmSaveModal" tabindex="-1" role="dialog" aria-labelledby="confirmSaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmSaveModalLabel">Konfirmasi Simpan</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menyimpan transaksi peminjaman ini?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
+                <button class="btn btn-primary" type="button" onclick="document.getElementById('borrowingForm').submit();">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
