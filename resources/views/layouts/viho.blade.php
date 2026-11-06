@@ -34,10 +34,9 @@
                 </div>
                 <div class="nav-right col">
                     <ul class="nav-menus">
-                        <li><a href="{{ route('books.index') }}">Buku</a></li>
-                        <li><a href="{{ route('borrowings.index') }}">Peminjaman</a></li>
-                        <li><a href="{{ route('borrowings.create') }}">Transaksi Baru</a></li>
-                        <li><a href="{{ route('api-test.index') }}">Test Sinkron</a></li>
+                        <li class="onhover-dropdown">
+                            <div class="notification-box"><i data-feather="bell"></i></div>
+                        </li>
                     </ul>
                 </div>
             </div>
