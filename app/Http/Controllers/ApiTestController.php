@@ -20,7 +20,9 @@ class ApiTestController extends Controller
         try {
             $requestHttp = Http::timeout(15)->acceptJson();
             if ($token) {
-                $requestHttp = $requestHttp->withToken($token);
+                $requestHttp = $requestHttp->withToken($token)->withHeaders([
+                    'X-API-Key' => $token,
+                ]);
             }
 
             $response = $requestHttp->get($url);

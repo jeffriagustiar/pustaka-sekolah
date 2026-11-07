@@ -33,16 +33,24 @@ class BorrowingController extends Controller
             'name' => ['required', 'string', 'min:1'],
         ]);
 
+        $needle = mb_strtolower(trim($request->input('name')));
+        $queryParam = ctype_digit($needle) ? 'nisn' : 'nama';
+
         $url = config('services.student_api.url', env('STUDENT_API_URL', 'https://roomroom-nine.vercel.app/data-siswa/api'));
         $token = config('services.student_api.token', env('STUDENT_API_TOKEN'));
 
         try {
             $http = Http::timeout(15)->acceptJson();
             if ($token) {
-                $http = $http->withToken($token);
+                $http = $http->withToken($token)->withHeaders([
+                    'X-API-Key' => $token,
+                ]);
             }
 
-            $response = $http->get($url);
+            $response = $http->get($url, [
+                $queryParam => $request->input('name'),
+                'limit' => 50,
+            ]);
 
             if (! $response->successful()) {
                 return response()->json([
@@ -62,17 +70,21 @@ class BorrowingController extends Controller
                 }
             }
 
-            $needle = mb_strtolower(trim($request->input('name')));
             $students = [];
             foreach ($rows as $row) {
-                $name = $row['nama'] ?? $row['name'] ?? $row['student_name'] ?? '';
-                if ($needle === '' || str_contains(mb_strtolower((string) $name), $needle)) {
-                    $students[] = [
-                        'nama' => $name,
-                        'nisn' => $row['nisn'] ?? $row['NISN'] ?? '',
-                        'kelas' => $row['kelas'] ?? $row['class'] ?? $row['Kelas'] ?? '',
-                    ];
+                $name = $row['nama_lengkap'] ?? $row['nama'] ?? $row['name'] ?? $row['student_name'] ?? '';
+                $nisn = $row['nisn'] ?? $row['NISN'] ?? '';
+                $kelas = $row['kelas'] ?? $row['class'] ?? $row['Kelas'] ?? '';
+
+                if ($needle !== '' && ! str_contains(mb_strtolower((string) $name), $needle) && ! str_contains((string) $nisn, $needle)) {
+                    continue;
                 }
+
+                $students[] = [
+                    'nama' => $name,
+                    'nisn' => $nisn,
+                    'kelas' => $kelas,
+                ];
             }
 
             return response()->json([
