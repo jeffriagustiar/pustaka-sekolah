@@ -192,6 +192,22 @@ class BorrowingController extends Controller
         return back()->with('success', 'Buku terpilih berhasil dikembalikan.');
     }
 
+    public function destroy(BorrowingTransaction $transaction)
+    {
+        DB::transaction(function () use ($transaction) {
+            foreach ($transaction->details as $detail) {
+                if ($detail->status_item !== 'Dikembalikan') {
+                    $detail->book()->increment('stok_tersedia');
+                }
+                $detail->delete();
+            }
+
+            $transaction->delete();
+        });
+
+        return redirect()->route('borrowings.index')->with('success', 'Transaksi peminjaman berhasil dihapus (dev).');
+    }
+
     public function returnAll(BorrowingTransaction $transaction)
     {
         DB::transaction(function () use ($transaction) {

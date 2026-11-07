@@ -29,6 +29,7 @@
                                 @if ($trx->status_global !== 'Selesai Total')
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#confirmActionModal" data-action="{{ route('borrowings.return-all', $trx) }}" data-message="Kembalikan semua buku pada transaksi ini?">Kembalikan Semua</button>
                                 @endif
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteTransactionModal" data-action="{{ route('borrowings.destroy', $trx) }}" data-title="{{ $trx->student_name }}">Hapus (Dev)</button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -109,6 +110,29 @@
     </div>
 </div>
 
+<!-- Modal Hapus Transaksi (Dev) -->
+<div class="modal fade" id="deleteTransactionModal" tabindex="-1" role="dialog" aria-labelledby="deleteTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTransactionModalLabel">Konfirmasi Hapus (Dev)</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus transaksi <strong id="deleteTransactionTitle"></strong>? Stok buku yang belum dikembalikan akan dikembalikan.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
+                <form id="deleteTransactionForm" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 document.getElementById('confirmActionModal').addEventListener('show.bs.modal', function (event) {
@@ -117,6 +141,14 @@ document.getElementById('confirmActionModal').addEventListener('show.bs.modal', 
     var message = button.getAttribute('data-message');
     document.getElementById('confirmActionForm').setAttribute('action', action);
     document.getElementById('confirmActionMessage').textContent = message || 'Apakah Anda yakin?';
+});
+
+document.getElementById('deleteTransactionModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var action = button.getAttribute('data-action');
+    var title = button.getAttribute('data-title');
+    document.getElementById('deleteTransactionForm').setAttribute('action', action);
+    document.getElementById('deleteTransactionTitle').textContent = title;
 });
 </script>
 @endpush
