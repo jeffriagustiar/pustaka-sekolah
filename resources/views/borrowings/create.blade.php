@@ -24,9 +24,12 @@
         <div class="card">
             <div class="card-header"><h5>Pilih Buku</h5></div>
             <div class="card-body">
-                <div class="list-group mb-3" style="max-height:260px;overflow-y:auto;">
+                <div class="input-group mb-3">
+                    <input type="text" id="book-code-search" class="form-control" placeholder="Ketik kode buku...">
+                </div>
+                <div id="book-list" class="list-group mb-3" style="max-height:260px;overflow-y:auto;">
                     @foreach ($books as $book)
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="list-group-item d-flex justify-content-between align-items-center book-item" data-code="{{ strtolower($book->kode_buku) }}">
                             <div>
                                 <div class="fw-medium">{{ $book->judul }}</div>
                                 <small class="text-muted">{{ $book->kode_buku }} | Stok: {{ $book->stok_tersedia }}</small>
@@ -35,6 +38,7 @@
                         </div>
                     @endforeach
                 </div>
+                <div id="book-search-empty" class="text-muted small d-none">Tidak ada buku dengan kode tersebut.</div>
                 <h6>Keranjang Peminjaman</h6>
                 <div id="cart" class="list-group mb-2"></div>
             </div>
@@ -158,6 +162,27 @@ document.querySelectorAll('.btn-add-book').forEach(btn => {
 });
 
 renderCart();
+
+const bookItems = document.querySelectorAll('.book-item');
+function filterBooks() {
+    const q = document.getElementById('book-code-search').value.trim().toLowerCase();
+    let found = false;
+    bookItems.forEach(item => {
+        const code = item.getAttribute('data-code') || '';
+        if (q && code.includes(q)) {
+            item.classList.remove('d-none');
+            found = true;
+        } else {
+            item.classList.add('d-none');
+        }
+    });
+    const emptyEl = document.getElementById('book-search-empty');
+    if (emptyEl) {
+        emptyEl.classList.toggle('d-none', !q || found);
+    }
+}
+document.getElementById('book-code-search').addEventListener('input', filterBooks);
+filterBooks();
 </script>
 
 <div class="modal fade" id="confirmSaveModal" tabindex="-1" role="dialog" aria-labelledby="confirmSaveModalLabel" aria-hidden="true">
