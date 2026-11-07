@@ -160,6 +160,38 @@ class BorrowingController extends Controller
         return back()->with('success', 'Buku berhasil dikembalikan.');
     }
 
+    public function returnSelected(Request $request)
+    {
+        $validated = $request->validate([
+            'detail_ids' => ['required', 'array', 'min:1'],
+            'detail_ids.*' => ['integer', 'exists:borrowing_details,id'],
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            $transactionIds = [];
+            foreach (array_unique($validated['detail_ids']) as $detailId) {
+                $detail = BorrowingDetail::lockForUpdate()->findOrFail($detailId);
+                if ($detail->status_item === 'Dikembalikan') {
+                    continue;
+                }
+
+                $detail->update([
+                    'status_item' => 'Dikembalikan',
+                    'tanggal_dikembalikan' => now()->toDateString(),
+                ]);
+                $detail->book()->increment('stok_tersedia');
+
+                $transactionIds[] = $detail->transaction_id;
+            }
+
+            foreach (array_unique($transactionIds) as $transactionId) {
+                $this->refreshTransactionStatus($transactionId);
+            }
+        });
+
+        return back()->with('success', 'Buku terpilih berhasil dikembalikan.');
+    }
+
     public function returnAll(BorrowingTransaction $transaction)
     {
         DB::transaction(function () use ($transaction) {

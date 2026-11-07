@@ -32,40 +32,48 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Buku</th>
-                                            <th>Status</th>
-                                            <th>Tgl Dikembalikan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($trx->details as $detail)
+                            <form action="{{ route('borrowings.return-selected') }}" method="POST">
+                                @csrf
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $detail->book->judul ?? '-' }}</td>
-                                                <td>
-                                                    @if($detail->status_item === 'Dikembalikan')
-                                                        <span class="badge badge-success">{{ $detail->status_item }}</span>
-                                                    @else
-                                                        <span class="badge badge-primary">{{ $detail->status_item }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $detail->tanggal_dikembalikan ? $detail->tanggal_dikembalikan->format('d/m/Y') : '-' }}</td>
-                                                <td>
-                                                    @if ($detail->status_item !== 'Dikembalikan')
-                                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#confirmActionModal" data-action="{{ route('borrowings.return-item', $detail) }}" data-message="Kembalikan buku ini?">Kembalikan</button>
-                                                    @else
-                                                        <span class="text-muted">-</span>
-                                                    @endif
-                                                </td>
+                                                <th style="width:40px;">Pilih</th>
+                                                <th>Buku</th>
+                                                <th>Status</th>
+                                                <th>Tgl Dikembalikan</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($trx->details as $detail)
+                                                <tr>
+                                                    <td>
+                                                        @if ($detail->status_item !== 'Dikembalikan')
+                                                            <input type="checkbox" name="detail_ids[]" value="{{ $detail->id }}">
+                                                        @else
+                                                            <input type="checkbox" disabled checked>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $detail->book->judul ?? '-' }}</td>
+                                                    <td>
+                                                        @if($detail->status_item === 'Dikembalikan')
+                                                            <span class="badge badge-success">{{ $detail->status_item }}</span>
+                                                        @else
+                                                            <span class="badge badge-primary">{{ $detail->status_item }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $detail->tanggal_dikembalikan ? $detail->tanggal_dikembalikan->format('d/m/Y') : '-' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @if ($trx->status_global !== 'Selesai Total')
+                                    <div class="mt-2">
+                                        <button type="submit" class="btn btn-sm btn-primary">Kembalikan Terpilih</button>
+                                    </div>
+                                @endif
+                            </form>
                         </div>
                     </div>
                 @empty
@@ -79,6 +87,7 @@
     </div>
 </div>
 
+<!-- Modal Konfirmasi Aksi -->
 <div class="modal fade" id="confirmActionModal" tabindex="-1" role="dialog" aria-labelledby="confirmActionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
