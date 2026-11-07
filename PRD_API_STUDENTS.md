@@ -19,6 +19,8 @@ Menyediakan panduan standar untuk mengintegrasikan data siswa dari REST API ekst
 GET https://<your-domain>/data-siswa/api
 ```
 
+Catatan: API ini **per sekolah**. Token dibuat per sekolah (satu key untuk semua admin di sekolah tersebut) melalui menu "Kelola API", dan endpoint hanya mengembalikan data siswa dari sekolah yang terkait dengan key tersebut.
+
 ### 3.2 Header (pilih salah satu)
 
 - `Authorization: Bearer <API_KEY>`
