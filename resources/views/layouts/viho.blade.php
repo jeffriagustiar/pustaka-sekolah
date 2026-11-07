@@ -97,6 +97,11 @@
                                     <div><h6>Menu</h6></div>
                                 </li>
                                 <li>
+                                    <a class="nav-link menu-title link-nav" href="{{ route('dashboard') }}">
+                                        <i data-feather="home"></i><span>Dashboard</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="nav-link menu-title link-nav" href="{{ route('books.index') }}">
                                         <i data-feather="book"></i><span>Buku</span>
                                     </a>
@@ -150,9 +155,11 @@
     <script src="{{ asset('assets/js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/feather/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/js/icons/feather-icon/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/js/icons/feather-icon/feather-icon.js') }}"></script>
     <script src="{{ asset('assets/js/scrollbar/simplebar.js') }}"></script>
     <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
+    <script src="{{ asset('assets/js/config.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script>
         if (window.feather) { feather.replace(); }
