@@ -114,14 +114,11 @@ document.getElementById('btn-search').addEventListener('click', async function (
     const resEl = document.getElementById('student-results');
     resEl.innerHTML = '<div class="list-group-item text-muted">Mencari...</div>';
     try {
-        const response = await fetch("{{ route('borrowings.search-students') }}", {
-            method: 'POST',
+        const response = await fetch("{{ route('borrowings.search-students') }}?name=" + encodeURIComponent(name), {
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
             },
-            body: JSON.stringify({ name }),
         });
         const data = await response.json();
         resEl.innerHTML = '';

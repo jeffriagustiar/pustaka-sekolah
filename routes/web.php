@@ -13,10 +13,10 @@ Route::resource('books', BookController::class);
 
 Route::get('borrowings', [BorrowingController::class, 'index'])->name('borrowings.index');
 Route::get('borrowings/create', [BorrowingController::class, 'create'])->name('borrowings.create');
-Route::post('borrowings/search-students', [BorrowingController::class, 'searchStudents'])->name('borrowings.search-students');
+Route::get('borrowings/search-students', [BorrowingController::class, 'searchStudents'])->name('borrowings.search-students');
 Route::post('borrowings', [BorrowingController::class, 'store'])->name('borrowings.store');
 Route::post('borrowings/details/{detail}/return', [BorrowingController::class, 'returnItem'])->name('borrowings.return-item');
 Route::post('borrowings/{transaction}/return-all', [BorrowingController::class, 'returnAll'])->name('borrowings.return-all');
 
 Route::get('api-test', [ApiTestController::class, 'index'])->name('api-test.index');
-Route::post('api-test/test', [ApiTestController::class, 'test'])->name('api-test.test');
+Route::get('api-test/test', [ApiTestController::class, 'test'])->name('api-test.test');

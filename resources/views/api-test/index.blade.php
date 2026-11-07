@@ -26,11 +26,9 @@ document.getElementById('btn-test').addEventListener('click', async function () 
 
     try {
         const response = await fetch("{{ route('api-test.test') }}", {
-            method: 'POST',
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
             },
         });
         const data = await response.json();
