@@ -10,6 +10,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 Route::resource('books', BookController::class);
+Route::post('books/import', [BookController::class, 'import'])->name('books.import');
 
 Route::get('borrowings', [BorrowingController::class, 'index'])->name('borrowings.index');
 Route::get('borrowings/create', [BorrowingController::class, 'create'])->name('borrowings.create');

@@ -63,4 +63,58 @@ class BookController extends Controller
 
         return redirect()->route('books.index')->with('success', 'Data buku berhasil dihapus.');
     }
+
+    public function import(Request $request)
+    {
+        $rows = $request->input('books', []);
+
+        if (! is_array($rows) || empty($rows)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada data untuk diimport.',
+            ], 422);
+        }
+
+        $created = 0;
+        $updated = 0;
+        $errors = [];
+
+        foreach ($rows as $index => $row) {
+            $kode = trim((string) ($row['kode_buku'] ?? ''));
+            $judul = trim((string) ($row['judul'] ?? ''));
+            $pengarang = trim((string) ($row['pengarang'] ?? ''));
+
+            if ($kode === '' || $judul === '' || $pengarang === '') {
+                $errors[] = 'Baris '.($index + 1).': kode_buku, judul, pengarang wajib diisi.';
+
+                continue;
+            }
+
+            $data = [
+                'kode_buku' => $kode,
+                'judul' => $judul,
+                'pengarang' => $pengarang,
+                'penerbit' => trim((string) ($row['penerbit'] ?? '')) ?: null,
+                'tahun_terbit' => isset($row['tahun_terbit']) && $row['tahun_terbit'] !== '' ? (int) $row['tahun_terbit'] : null,
+                'stok_tersedia' => isset($row['stok_tersedia']) && $row['stok_tersedia'] !== '' ? (int) $row['stok_tersedia'] : 0,
+            ];
+
+            $existing = Book::where('kode_buku', $kode)->first();
+            if ($existing) {
+                $existing->update($data);
+                $updated++;
+            } else {
+                Book::create($data);
+                $created++;
+            }
+        }
+
+        return response()->json([
+            'success' => empty($errors),
+            'message' => "Import selesai. {$created} ditambahkan, {$updated} diperbarui.".($errors ? ' Ada '.count($errors).' baris bermasalah.' : ''),
+            'created' => $created,
+            'updated' => $updated,
+            'errors' => $errors,
+        ], empty($errors) ? 200 : 207);
+    }
 }
