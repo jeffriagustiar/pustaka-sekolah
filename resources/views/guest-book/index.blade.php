@@ -37,11 +37,11 @@
             <div class="card">
                 <div class="card-header"><h5>Data Pengunjung</h5></div>
                 <div class="card-body">
-                    <p class="mb-1"><strong>Nama:</strong> {{ $v->nama }}</p>
-                    <p class="mb-1"><strong>Jenis:</strong> {{ ucfirst($v->visitor_type) }}</p>
-                    <p class="mb-1"><strong>NISN/NIP:</strong> {{ $v->identifier }}</p>
-                    <p class="mb-1"><strong>Kelas:</strong> {{ $v->kelas ?? '-' }}</p>
-                    <p class="mb-0"><strong>Tanggal Kunjungan:</strong> {{ $v->visited_at->format('d/m/Y H:i') }}</p>
+                    <p class="mb-1"><strong>Nama:</strong> {{ $v['nama'] ?? '-' }}</p>
+                    <p class="mb-1"><strong>Jenis:</strong> {{ ucfirst($v['visitor_type'] ?? '-') }}</p>
+                    <p class="mb-1"><strong>NISN/NIP:</strong> {{ $v['identifier'] ?? '-' }}</p>
+                    <p class="mb-1"><strong>Kelas:</strong> {{ $v['kelas'] ?? '-' }}</p>
+                    <p class="mb-0"><strong>Tanggal Kunjungan:</strong> {{ \Carbon\Carbon::parse($v['visited_at'])->format('d/m/Y H:i') }}</p>
                 </div>
             </div>
         @endif
