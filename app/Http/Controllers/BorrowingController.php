@@ -11,13 +11,24 @@ use Illuminate\Support\Facades\Http;
 
 class BorrowingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = BorrowingTransaction::with(['details.book'])
-            ->orderByDesc('created_at')
-            ->paginate(15);
+        $q = trim((string) $request->input('q', ''));
 
-        return view('borrowings.index', compact('transactions'));
+        $query = BorrowingTransaction::with(['details.book'])
+            ->orderByDesc('tanggal_pinjam')
+            ->orderByDesc('created_at');
+
+        if ($q !== '') {
+            $query->where(function ($builder) use ($q) {
+                $builder->where('student_name', 'like', '%'.$q.'%')
+                    ->orWhere('student_nisn', 'like', '%'.$q.'%');
+            });
+        }
+
+        $transactions = $query->paginate(5)->appends(['q' => $q]);
+
+        return view('borrowings.index', compact('transactions', 'q'));
     }
 
     public function create()

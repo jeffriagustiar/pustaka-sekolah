@@ -6,9 +6,20 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                <h5>Daftar Peminjaman</h5>
-                <a href="{{ route('borrowings.create') }}" class="btn btn-primary">Transaksi Baru</a>
+            <div class="card-header pb-0">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Daftar Peminjaman</h5>
+                    <a href="{{ route('borrowings.create') }}" class="btn btn-primary">Transaksi Baru</a>
+                </div>
+                <form method="GET" action="{{ route('borrowings.index') }}" class="mb-2">
+                    <div class="input-group">
+                        <input type="text" name="q" value="{{ $q ?? '' }}" class="form-control" placeholder="Cari nama atau NISN siswa...">
+                        <button type="submit" class="btn btn-outline-primary">Cari</button>
+                        @if(!empty($q))
+                            <a href="{{ route('borrowings.index') }}" class="btn btn-outline-secondary">Reset</a>
+                        @endif
+                    </div>
+                </form>
             </div>
             <div class="card-body">
                 @forelse ($transactions as $trx)
@@ -150,6 +161,23 @@ document.getElementById('deleteTransactionModal').addEventListener('show.bs.moda
     document.getElementById('deleteTransactionForm').setAttribute('action', action);
     document.getElementById('deleteTransactionTitle').textContent = title;
 });
+</script>
+@endpush
+
+@push('scripts')
+<script>
+(function () {
+    var input = document.querySelector('input[name="q"]');
+    var form = input ? input.closest('form') : null;
+    if (!input || !form) return;
+    var timer = null;
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            form.submit();
+        }, 400);
+    });
+})();
 </script>
 @endpush
 
