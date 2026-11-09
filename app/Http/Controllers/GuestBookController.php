@@ -67,6 +67,6 @@ class GuestBookController extends Controller
 
         return redirect()->route('guest-book.index')
             ->with('success', 'Anda Pengunjung Ke '.$number)
-            ->with('visit', $visit);
+            ->with('visitor_number', $number);
     }
 }
