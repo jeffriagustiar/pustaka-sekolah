@@ -10,24 +10,24 @@ class GuestBookController extends Controller
 {
     public function index()
     {
-        $visits = GuestVisit::orderByDesc('visited_at')->paginate(15);
-
-        return view('guest-book.index', compact('visits'));
+        return view('guest-book.index');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'visitor_type' => ['required', 'in:siswa,guru'],
             'identifier' => ['required', 'string', 'max:50'],
-            'nama' => ['nullable', 'string', 'max:255'],
-            'kelas' => ['nullable', 'string', 'max:50'],
         ]);
 
-        $nama = trim((string) ($validated['nama'] ?? ''));
-        $kelas = trim((string) ($validated['kelas'] ?? ''));
+        $identifier = trim($validated['identifier']);
 
-        if ($validated['visitor_type'] === 'siswa') {
+        // Deteksi jenis: NIP (18 digit) = guru, selain itu siswa
+        $visitorType = (strlen($identifier) >= 15 && ctype_digit($identifier)) ? 'guru' : 'siswa';
+
+        $nama = $visitorType === 'guru' ? 'Guru ('.$identifier.')' : 'Siswa ('.$identifier.')';
+        $kelas = null;
+
+        if ($visitorType === 'siswa') {
             $url = config('services.student_api.url', env('STUDENT_API_URL', 'https://roomroom-nine.vercel.app/data-siswa/api'));
             $token = config('services.student_api.token', env('STUDENT_API_TOKEN'));
 
@@ -38,7 +38,7 @@ class GuestBookController extends Controller
                 }
 
                 $response = $http->get($url, [
-                    'nisn' => $validated['identifier'],
+                    'nisn' => $identifier,
                     'limit' => 5,
                 ]);
 
@@ -51,29 +51,22 @@ class GuestBookController extends Controller
                     }
                 }
             } catch (\Throwable $e) {
-                // fallback ke input manual
-            }
-
-            if ($nama === '') {
-                return back()->withErrors(['nama' => 'Data siswa tidak ditemukan. Isi nama manual.'])->withInput();
-            }
-        } else {
-            if ($nama === '') {
-                return back()->withErrors(['nama' => 'Nama guru wajib diisi.'])->withInput();
+                // fallback ke nilai default
             }
         }
 
+        $number = GuestVisit::whereDate('visited_at', now()->toDateString())->count() + 1;
+
         $visit = GuestVisit::create([
-            'visitor_type' => $validated['visitor_type'],
-            'identifier' => $validated['identifier'],
+            'visitor_type' => $visitorType,
+            'identifier' => $identifier,
             'nama' => $nama,
-            'kelas' => $kelas ?: null,
+            'kelas' => $kelas,
             'visited_at' => now(),
         ]);
 
-        $number = GuestVisit::where('id', '<=', $visit->id)->count();
-
         return redirect()->route('guest-book.index')
-            ->with('success', 'Selamat datang, '.$nama.'! Anda adalah pengunjung ke-'.$number.'.');
+            ->with('success', 'Anda Pengunjung Ke '.$number)
+            ->with('visit', $visit);
     }
 }
