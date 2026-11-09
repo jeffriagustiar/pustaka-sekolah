@@ -93,6 +93,19 @@
 </div>
 
 <div class="row">
+    <div class="col-xl-12 col-md-12">
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Buku Tamu Bulan Ini</h5>
+            </div>
+            <div class="card-body">
+                <div id="guest-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header pb-0 d-flex justify-content-between align-items-center">
@@ -152,6 +165,17 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     var chart = new ApexCharts(document.querySelector('#borrowing-chart'), options);
     chart.render();
+
+    var guestOptions = {
+        chart: { type: 'bar', height: 280, toolbar: { show: false } },
+        series: [{ name: 'Pengunjung', data: @json($guestData) }],
+        xaxis: { categories: @json($guestLabels), title: { text: 'Tanggal' } },
+        colors: ['#ba895d'],
+        plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
+        dataLabels: { enabled: false },
+    };
+    var guestChart = new ApexCharts(document.querySelector('#guest-chart'), guestOptions);
+    guestChart.render();
 });
 </script>
 @endpush

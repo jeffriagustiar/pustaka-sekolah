@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\BorrowingDetail;
 use App\Models\BorrowingTransaction;
+use App\Models\GuestVisit;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -38,6 +39,16 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // Buku tamu bulan ini (per hari)
+        $guestLabels = [];
+        $guestData = [];
+        $daysInMonth = now()->daysInMonth;
+        for ($d = 1; $d <= $daysInMonth; $d++) {
+            $date = now()->startOfMonth()->addDays($d - 1);
+            $guestLabels[] = (string) $d;
+            $guestData[] = GuestVisit::whereDate('visited_at', $date->toDateString())->count();
+        }
+
         return view('dashboard.index', compact(
             'totalBooks',
             'totalStock',
@@ -47,7 +58,9 @@ class DashboardController extends Controller
             'labels',
             'data',
             'recentTransactions',
-            'lowStockBooks'
+            'lowStockBooks',
+            'guestLabels',
+            'guestData'
         ));
     }
 }
