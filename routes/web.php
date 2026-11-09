@@ -4,10 +4,14 @@ use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GuestBookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+Route::get('guest-book', [GuestBookController::class, 'index'])->name('guest-book.index');
+Route::post('guest-book', [GuestBookController::class, 'store'])->name('guest-book.store');
 
 Route::resource('books', BookController::class);
 Route::post('books/import', [BookController::class, 'import'])->name('books.import');
