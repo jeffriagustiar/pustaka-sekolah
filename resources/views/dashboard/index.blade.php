@@ -4,52 +4,39 @@
 
 @section('content')
 <div class="row">
-    <div class="col-sm-6 col-xl-3 col-lg-6">
+    <div class="col-sm-6 col-xl-4 col-lg-6">
         <div class="card o-hidden">
-            <div class="card-body">
+            <div class="card-body py-2">
                 <div class="media static-top-widget">
                     <div class="media-body">
                         <span class="m-0">Total Buku</span>
-                        <h4 class="mb-0 counter">{{ $totalBooks }}</h4>
+                        <h5 class="mb-0 counter">{{ $totalBooks }}</h5>
                     </div>
                     <div class="align-self-center text-center"><i data-feather="book" class="font-primary"></i></div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3 col-lg-6">
+    <div class="col-sm-6 col-xl-4 col-lg-6">
         <div class="card o-hidden">
-            <div class="card-body">
+            <div class="card-body py-2">
                 <div class="media static-top-widget">
                     <div class="media-body">
                         <span class="m-0">Total Stok</span>
-                        <h4 class="mb-0 counter">{{ $totalStock }}</h4>
+                        <h5 class="mb-0 counter">{{ $totalStock }}</h5>
                     </div>
                     <div class="align-self-center text-center"><i data-feather="layers" class="font-secondary"></i></div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3 col-lg-6">
+    <div class="col-sm-6 col-xl-4 col-lg-6">
         <div class="card o-hidden">
-            <div class="card-body">
-                <div class="media static-top-widget">
-                    <div class="media-body">
-                        <span class="m-0">Transaksi</span>
-                        <h4 class="mb-0 counter">{{ $totalTransactions }}</h4>
-                    </div>
-                    <div class="align-self-center text-center"><i data-feather="file-text" class="font-warning"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-3 col-lg-6">
-        <div class="card o-hidden">
-            <div class="card-body">
+            <div class="card-body py-2">
                 <div class="media static-top-widget">
                     <div class="media-body">
                         <span class="m-0">Sedang Dipinjam</span>
-                        <h4 class="mb-0 counter">{{ $activeLoans }}</h4>
+                        <h5 class="mb-0 counter">{{ $activeLoans }}</h5>
                     </div>
                     <div class="align-self-center text-center"><i data-feather="repeat" class="font-danger"></i></div>
                 </div>
@@ -59,7 +46,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xl-8 col-md-12">
+    <div class="col-xl-6 col-md-12">
         <div class="card">
             <div class="card-header pb-0">
                 <h5>Peminjaman 6 Bulan Terakhir</h5>
@@ -69,31 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-md-12">
-        <div class="card">
-            <div class="card-header pb-0">
-                <h5>Stok Menipis</h5>
-            </div>
-            <div class="card-body">
-                @if($lowStockBooks->isEmpty())
-                    <p class="text-muted mb-0">Semua stok aman.</p>
-                @else
-                    <ul class="list-group">
-                        @foreach($lowStockBooks as $book)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $book->judul }}
-                                <span class="badge badge-danger">{{ $book->stok_tersedia }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-12 col-md-12">
+    <div class="col-xl-6 col-md-12">
         <div class="card">
             <div class="card-header pb-0">
                 <h5>Buku Tamu Bulan Ini</h5>
@@ -156,7 +119,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var options = {
-        chart: { type: 'bar', height: 320, toolbar: { show: false } },
+        chart: { type: 'bar', height: 300, toolbar: { show: false } },
         series: [{ name: 'Peminjaman', data: @json($data) }],
         xaxis: { categories: @json($labels) },
         colors: ['#24695c'],
@@ -167,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
     chart.render();
 
     var guestOptions = {
-        chart: { type: 'bar', height: 280, toolbar: { show: false } },
+        chart: { type: 'bar', height: 300, toolbar: { show: false } },
         series: [{ name: 'Pengunjung', data: @json($guestData) }],
         xaxis: { categories: @json($guestLabels), title: { text: 'Tanggal' } },
         colors: ['#ba895d'],

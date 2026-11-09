@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $data = [];
         for ($i = 5; $i >= 0; $i--) {
             $month = Carbon::now()->subMonths($i);
-            $labels[] = $month->translatedFormat('M Y');
+            $labels[] = $month->translatedFormat('M');
             $data[] = BorrowingTransaction::whereYear('created_at', $month->year)
                 ->whereMonth('created_at', $month->month)
                 ->count();
@@ -45,6 +45,9 @@ class DashboardController extends Controller
         $daysInMonth = now()->daysInMonth;
         for ($d = 1; $d <= $daysInMonth; $d++) {
             $date = now()->startOfMonth()->addDays($d - 1);
+            if (! $date->isWeekday()) {
+                continue;
+            }
             $guestLabels[] = (string) $d;
             $guestData[] = GuestVisit::whereDate('visited_at', $date->toDateString())->count();
         }
