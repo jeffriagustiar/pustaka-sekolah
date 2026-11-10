@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::get('api-test', [ApiTestController::class, 'index'])->name('api-test.index');
     Route::get('api-test/test', [ApiTestController::class, 'test'])->name('api-test.test');
 
+    Route::get('guest-book/export', [GuestBookController::class, 'export'])->name('guest-book.export');
+
     Route::resource('users', UserController::class);
     Route::get('profile', [UserController::class, 'profile'])->name('profile');
     Route::put('profile/password', [UserController::class, 'updatePassword'])->name('profile.password');

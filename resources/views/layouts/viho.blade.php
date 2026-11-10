@@ -115,6 +115,11 @@
                                 </li>
                                 @auth
                                 <li>
+                                    <a class="nav-link menu-title link-nav" href="{{ route('guest-book.export') }}">
+                                        <i data-feather="printer"></i><span>Cetak Buku Tamu</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="nav-link menu-title link-nav" href="{{ route('books.index') }}">
                                         <i data-feather="book"></i><span>Buku</span>
                                     </a>

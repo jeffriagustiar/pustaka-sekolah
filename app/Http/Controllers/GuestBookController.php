@@ -69,4 +69,25 @@ class GuestBookController extends Controller
             ->with('success', 'Anda Pengunjung Ke '.$number)
             ->with('visitor_number', $number);
     }
+
+    public function export(Request $request)
+    {
+        $month = $request->input('month', now()->format('Y-m'));
+        [$year, $mon] = explode('-', $month);
+
+        $visits = GuestVisit::whereYear('visited_at', $year)
+            ->whereMonth('visited_at', $mon)
+            ->orderBy('visited_at')
+            ->get();
+
+        if ($request->boolean('download')) {
+            $html = view('guest-book.export-word', compact('visits', 'month'))->render();
+
+            return response($html)
+                ->header('Content-Type', 'application/msword')
+                ->header('Content-Disposition', 'attachment; filename="buku_tamu_'.$month.'.doc"');
+        }
+
+        return view('guest-book.export', compact('visits', 'month'));
+    }
 }
