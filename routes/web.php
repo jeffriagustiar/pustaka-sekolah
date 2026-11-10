@@ -17,10 +17,11 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
+Route::get('guest-book', [GuestBookController::class, 'index'])->name('guest-book.index');
+Route::post('guest-book', [GuestBookController::class, 'store'])->name('guest-book.store');
+
 // Terproteksi
 Route::middleware('auth')->group(function () {
-    Route::get('guest-book', [GuestBookController::class, 'index'])->name('guest-book.index');
-    Route::post('guest-book', [GuestBookController::class, 'store'])->name('guest-book.store');
     Route::resource('books', BookController::class);
     Route::post('books/import', [BookController::class, 'import'])->name('books.import');
 

@@ -61,12 +61,18 @@
                         <li>
                             <div class="mode"><i class="fa fa-moon-o"></i></div>
                         </li>
-                        <li class="onhover-dropdown p-0">
-                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                @csrf
-                                <button class="btn btn-primary-light" type="submit"><i data-feather="log-out"></i> Keluar</button>
-                            </form>
-                        </li>
+                        @guest
+                            <li class="onhover-dropdown p-0">
+                                <a class="btn btn-primary-light" href="{{ route('login') }}"><i data-feather="log-in"></i> Login</a>
+                            </li>
+                        @else
+                            <li class="onhover-dropdown p-0">
+                                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button class="btn btn-primary-light" type="submit"><i data-feather="log-out"></i> Keluar</button>
+                                </form>
+                            </li>
+                        @endguest
                     </ul>
                 </div>
                 <div class="d-lg-none mobile-toggle pull-right w-auto">
@@ -103,6 +109,12 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a class="nav-link menu-title link-nav" href="{{ route('guest-book.index') }}">
+                                        <i data-feather="users"></i><span>Buku Tamu</span>
+                                    </a>
+                                </li>
+                                @auth
+                                <li>
                                     <a class="nav-link menu-title link-nav" href="{{ route('books.index') }}">
                                         <i data-feather="book"></i><span>Buku</span>
                                     </a>
@@ -123,11 +135,6 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="nav-link menu-title link-nav" href="{{ route('guest-book.index') }}">
-                                        <i data-feather="users"></i><span>Buku Tamu</span>
-                                    </a>
-                                </li>
-                                <li>
                                     <a class="nav-link menu-title link-nav" href="{{ route('users.index') }}">
                                         <i data-feather="user"></i><span>Manajemen User</span>
                                     </a>
@@ -137,6 +144,7 @@
                                         <i data-feather="key"></i><span>Ubah Password</span>
                                     </a>
                                 </li>
+                                @endauth
                             </ul>
                         </div>
                         <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
