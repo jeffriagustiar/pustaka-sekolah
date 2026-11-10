@@ -62,9 +62,10 @@
                             <div class="mode"><i class="fa fa-moon-o"></i></div>
                         </li>
                         <li class="onhover-dropdown p-0">
-                            <button class="btn btn-primary-light" type="button">
-                                <a href="#"><i data-feather="log-out"></i> Keluar</a>
-                            </button>
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button class="btn btn-primary-light" type="submit"><i data-feather="log-out"></i> Keluar</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -124,6 +125,16 @@
                                 <li>
                                     <a class="nav-link menu-title link-nav" href="{{ route('guest-book.index') }}">
                                         <i data-feather="users"></i><span>Buku Tamu</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link menu-title link-nav" href="{{ route('users.index') }}">
+                                        <i data-feather="user"></i><span>Manajemen User</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link menu-title link-nav" href="{{ route('profile') }}">
+                                        <i data-feather="key"></i><span>Ubah Password</span>
                                     </a>
                                 </li>
                             </ul>
